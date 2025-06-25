@@ -8,8 +8,7 @@ import tensorflow as tf
 
 app = FastAPI()
 
-# CORS setup
-origins = ["http://localhost", "http://localhost:3000"]
+origins = ["http://localhost", "http://localhost:3000", "http://localhost:5173"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -21,8 +20,8 @@ app.add_middleware(
 FILTER_MODEL = tf.keras.models.load_model("../saved-models/potato_filter.keras", compile=False)
 PREDICT_MODEL = tf.keras.models.load_model("../saved-models/potato.keras", compile=False)
 
-FILTER_CLASSES = ['non-potato', 'potato']  # binary
-DISEASE_CLASSES = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']  # multiclass
+FILTER_CLASSES = ['non-potato', 'potato']
+DISEASE_CLASSES = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']
 
 @app.get("/ping")
 async def ping():
@@ -31,7 +30,7 @@ async def ping():
 def read_file_as_image(data) -> np.ndarray:
     image = Image.open(BytesIO(data)).convert('RGB')
     image = image.resize((256, 256))
-    image = np.array(image) / 255.0
+    image = np.array(image).astype(np.float32) 
     return image
 
 @app.post("/predict")
@@ -41,6 +40,8 @@ async def predict(file: UploadFile = File(...)):
 
     # Step 1: Is it a potato?
     is_potato_pred = FILTER_MODEL.predict(img_batch)
+    print("Filter model output:", is_potato_pred)
+    print("Filter model output shape:", is_potato_pred.shape)
     is_potato = is_potato_pred[0][0] >= 0.5
 
     if not is_potato:

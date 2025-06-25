@@ -75,11 +75,11 @@ const UploadImage = () => {
             </div>
           </section>
           {/* Show uploaded image preview */}
-          {leafImage && (
+              {leafImage && (
             <div className="flex justify-center mt-8">
-              <img
-                src={URL.createObjectURL(leafImage)}
-                alt="uploaded leaf"
+                <img
+                  src={URL.createObjectURL(leafImage)}
+                  alt="uploaded leaf"
                 className="rounded-lg max-h-64 shadow-md"
               />
             </div>
@@ -92,7 +92,7 @@ const UploadImage = () => {
                 <p className="text-lg">Class: <span className="font-semibold">{result.class}</span></p>
                 <p className="text-lg">Confidence: <span className="font-semibold">{result.confidence}</span></p>
               </div>
-            </div>
+                </div>
           )}
           {/* Show error */}
           {error && (
@@ -100,10 +100,10 @@ const UploadImage = () => {
               <div className="bg-red-50 border border-red-200 rounded-lg p-6 shadow-md text-center text-red-700">
                 {error}
               </div>
-            </div>
+                </div>
           )}
-        </div>
-      </div>
+                </div>
+              </div>
     </>
   );
 };
